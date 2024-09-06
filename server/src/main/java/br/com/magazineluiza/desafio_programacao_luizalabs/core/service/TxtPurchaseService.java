@@ -10,10 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -32,20 +32,10 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
                 throw new IOException("Header not found or empty file");
             }
 
-            String[] headers = headerLine.split("\t");
-
             String line;
+            UUID correlationId = UUID.randomUUID();
             while ((line = br.readLine()) != null) {
-                String[] values = line.split("\t");
-
-                Purchase purchase = new Purchase();
-
-                for (int i = 0; i < headers.length; i++) {
-                    String columnName = headers[i].toLowerCase();
-                    String value = values[i];
-                    setFieldValue(purchase, columnName, value);
-                }
-
+                Purchase purchase = getPurchase(line, correlationId);
                 purchases.add(purchase);
             }
         } catch (IOException e) {
@@ -55,21 +45,18 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
         return purchases;
     }
 
-    private void setFieldValue(Purchase purchase, String fieldName, String value) {
-        try {
-            Field field = Purchase.class.getDeclaredField(fieldName);
-            field.setAccessible(true);
+    private static Purchase getPurchase(String line, UUID correlationId) {
+        String[] values = line.split("\t");
 
-            if (field.getType() == String.class) {
-                field.set(purchase, value);
-            } else if (field.getType() == int.class || field.getType() == Integer.class) {
-                field.set(purchase, Integer.parseInt(value));
-            } else if (field.getType() == BigDecimal.class) {
-                field.set(purchase, new BigDecimal(value));
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        Purchase purchase = new Purchase();
+        purchase.setPurchaserName(values[0]);
+        purchase.setItemDescription(values[1]);
+        purchase.setItemPrice(new BigDecimal(values[2]));
+        purchase.setPurchaseCount(Integer.parseInt(values[3]));
+        purchase.setMerchantAddress(values[4]);
+        purchase.setMerchantName(values[5]);
+        purchase.setCorrelationId(correlationId);
+        return purchase;
     }
 
     @Override
@@ -89,8 +76,15 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
     }
 
     @Override
-    public BigDecimal gross() {
-        List<Purchase> purchases = this.findAll();
+    public BigDecimal gross(String correlationId) {
+        List<Purchase> purchases;
+
+        if (Objects.nonNull(correlationId)) {
+            purchases = this.findByCorrelationId(correlationId);
+        } else {
+            purchases = this.findAll();
+        }
+
         return purchases.stream()
                 .map(Purchase::getItemPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

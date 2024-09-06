@@ -26,7 +26,6 @@ public class Purchase {
     @PrePersist
     protected void onCreate() {
         inclusionDate = LocalDateTime.now();
-        correlationId = UUID.randomUUID();
     }
 
 }

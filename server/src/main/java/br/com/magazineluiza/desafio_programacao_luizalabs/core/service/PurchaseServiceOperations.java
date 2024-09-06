@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface PurchaseServiceOperations extends PurchaseReader<MultipartFile> {
 
-    void saveAll(List<Purchase> file);
+    void saveAll(List<Purchase> purchases);
 
     List<Purchase> findAll();
 
     List<Purchase> findByCorrelationId(String correlationId);
 
-    BigDecimal gross();
+    BigDecimal gross(String correlationId);
 
 }
