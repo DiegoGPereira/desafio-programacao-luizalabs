@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,12 +26,12 @@ public class PurchaseController {
     PurchaseMapper mapper = Mappers.getMapper(PurchaseMapper.class);
 
     @PostMapping("/upload")
-    public ResponseEntity<Void> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<UUID> uploadFile(@RequestParam("file") MultipartFile file) {
         List<Purchase> purchases;
         purchases = purchaseService.readFile(file);
         purchaseService.saveAll(purchases);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(null);
+                .body(purchases.getFirst().getCorrelationId());
     }
 
     @GetMapping("/gross")
