@@ -1,5 +1,6 @@
 package br.com.magazineluiza.desafio_programacao_luizalabs.api.controller;
 
+import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseMapper;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Purchase;
@@ -18,12 +19,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/purchase")
+@RequestMapping("api/v1/purchase")
 public class PurchaseController {
 
     @Autowired
     private PurchaseServiceOperations purchaseService;
-    PurchaseMapper mapper = Mappers.getMapper(PurchaseMapper.class);
 
     @PostMapping("/upload")
     public ResponseEntity<UUID> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -41,10 +41,16 @@ public class PurchaseController {
 
     @GetMapping("/{correlationId}")
     public ResponseEntity<List<PurchaseResponse>> findByCorrelationId(@PathVariable String correlationId) {
+        PurchaseMapper mapper = Mappers.getMapper(PurchaseMapper.class);
         List<PurchaseResponse> purchaseResponses =
                 purchaseService.findByCorrelationId(correlationId).stream()
-                        .map(purchase -> mapper.toDto(purchase)).collect(Collectors.toList());
+                        .map(mapper::toPurchaseResponse).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(purchaseResponses);
+    }
+
+    @GetMapping("/uploaded-files")
+    public ResponseEntity<List<PurchaseFilesResponse>> findAllUploadedFiles() {
+        return ResponseEntity.status(HttpStatus.OK).body(purchaseService.findAllUploadedFiles());
     }
 
 }

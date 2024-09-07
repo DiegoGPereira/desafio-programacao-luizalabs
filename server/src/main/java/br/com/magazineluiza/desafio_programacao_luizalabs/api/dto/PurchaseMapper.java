@@ -6,6 +6,6 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface PurchaseMapper {
 
-    PurchaseResponse toDto(Purchase purchase);
+    PurchaseResponse toPurchaseResponse(Purchase purchase);
 
 }

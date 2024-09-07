@@ -1,5 +1,6 @@
 package br.com.magazineluiza.desafio_programacao_luizalabs.core.service;
 
+import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Purchase;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.repository.PurchaseRepository;
 import jakarta.transaction.Transactional;
@@ -88,6 +89,11 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
         return purchases.stream()
                 .map(Purchase::getItemPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public List<PurchaseFilesResponse> findAllUploadedFiles() {
+        return purchaseRepository.findAllUploadedFiles();
     }
 
 }
