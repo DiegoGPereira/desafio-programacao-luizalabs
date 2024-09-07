@@ -1,0 +1,27 @@
+---
+import FileDetails from "../../components/FileDetails";
+
+const { correlationId } = Astro.params;
+---
+
+<html lang="pt-BR" class="bg-gray-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Details</title>
+  </head>
+  <body class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">
+      Compras
+    </h1>
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <a
+        href="/"
+        class="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block"
+      >
+        Retornar
+      </a>
+      <FileDetails client:load correlationId={correlationId} />
+    </div>
+  </body>
+</html>
