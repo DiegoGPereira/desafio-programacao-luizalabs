@@ -15,7 +15,8 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findByCorrelationId(UUID correlationId);
 
     @Query(value = "SELECT new br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesResponse" +
-            "(correlationId as correlationId, CAST(inclusionDate AS LocalDate)) FROM Purchase " +
+            "(correlationId as correlationId, CAST(inclusionDate AS LocalDate), SUM(itemPrice), SUM(SUM(itemPrice)) OVER ()) " +
+            " FROM Purchase " +
             "GROUP BY correlationId, CAST(inclusionDate AS LocalDate)")
     List<PurchaseFilesResponse> findAllUploadedFiles();
 

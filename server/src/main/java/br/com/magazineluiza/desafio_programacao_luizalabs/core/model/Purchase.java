@@ -12,8 +12,8 @@ import java.util.UUID;
 public class Purchase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String purchaserName;
     private String itemDescription;
     private BigDecimal itemPrice;

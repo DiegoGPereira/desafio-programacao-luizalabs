@@ -11,4 +11,5 @@ public record PurchaseResponse(String purchaserName,
                                String merchantAddress,
                                String merchantName,
                                UUID correlationId,
-                               LocalDateTime inclusionDate) {}
+                               LocalDateTime inclusionDate) {
+}

@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -67,28 +66,8 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
     }
 
     @Override
-    public List<Purchase> findAll() {
-        return purchaseRepository.findAll();
-    }
-
-    @Override
     public List<Purchase> findByCorrelationId(String correlationId) {
         return purchaseRepository.findByCorrelationId(UUID.fromString(correlationId));
-    }
-
-    @Override
-    public BigDecimal gross(String correlationId) {
-        List<Purchase> purchases;
-
-        if (Objects.nonNull(correlationId)) {
-            purchases = this.findByCorrelationId(correlationId);
-        } else {
-            purchases = this.findAll();
-        }
-
-        return purchases.stream()
-                .map(Purchase::getItemPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
