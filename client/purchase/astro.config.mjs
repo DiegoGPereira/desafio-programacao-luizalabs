@@ -7,4 +7,9 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
     output: 'server',
     integrations: [react(), tailwind()],
+    vite: {
+    ssr: {
+      noExternal: ["react-router-dom"]
+    }
+  }
 });

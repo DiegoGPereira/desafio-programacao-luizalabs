@@ -1,4 +1,4 @@
-package br.com.magazineluiza.desafio_programacao_luizalabs.unit.api.controller.controller;
+package br.com.magazineluiza.desafio_programacao_luizalabs.unit.api.controller;
 
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.controller.PurchaseController;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesResponse;

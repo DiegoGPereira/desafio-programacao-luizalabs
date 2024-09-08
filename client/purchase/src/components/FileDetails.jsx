@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CurrencyUtils from '../utils/CurrencyUtils';
+import { getToken } from '../utils/TokenUtils';
 
 const FileDetails = ({ correlationId }) => {
     const [fileData, setFileData] = useState(null);
@@ -8,16 +9,27 @@ const FileDetails = ({ correlationId }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        const token = getToken();
         const url = 'http://localhost:8080';
         const fetchFileData = async () => {
 
             try {
-                const response = await axios.get(url + `/api/v1/purchase/${correlationId}`);
+                const response = await axios.get(url + `/api/v1/purchase/${correlationId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                    }
+                });
                 setFileData(response.data);
                 setLoading(false);
             } catch (error) {
-                setError('Erro ao buscar os dados');
                 setLoading(false);
+                if (error.response) {
+                    setError(`Erro ao buscar os dados: ${error.response.data.message || error.response.data}`);
+                } else if (error.request) {
+                    setError('Erro ao buscar os dados: Sem resposta do servidor, ' + error.message);
+                } else {
+                    setError('Erro ao buscar os dados: ' + error.message);
+                }
             }
         };
 

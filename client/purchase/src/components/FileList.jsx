@@ -1,20 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CurrencyUtils from '../utils/CurrencyUtils';
+import DateUtils from '../utils/DateUtils';
+import { getToken } from '../utils/TokenUtils';
 
 const DataTable = ({ refreshTrigger }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   const handleFileChange = async () => {
+    const token = getToken();
+
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/purchase/uploaded-files`);
+      const response = await axios.get(`http://localhost:8080/api/v1/purchase/uploaded-files`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
+
       setFiles(response.data);
       setLoading(false);
     } catch (error) {
-      setError('Erro ao buscar os dados');
       setLoading(false);
+      if (error.response) {
+        setError(`Erro ao buscar os dados: ${error.response.data.message || error.response.data}`);
+      } else if (error.request) {
+        setError('Erro ao buscar os dados: Sem resposta do servidor, ' + error.message);
+      } else {
+        setError('Erro ao buscar os dados: ' + error.message);
+      }
     }
   };
 
@@ -36,6 +52,9 @@ const DataTable = ({ refreshTrigger }) => {
     <div className="overflow-x-auto">
       {hasFiles ? (
         <div>
+          <p className="text-lg font-semibold text-gray-700 mb-4">
+            Receita bruta: <span className="text-green-600">{CurrencyUtils.formatCurrency(files[0].totalGross)}</span>
+          </p>
           <table className="min-w-full bg-white">
             <thead className="bg-gray-100">
               <tr>
@@ -49,7 +68,7 @@ const DataTable = ({ refreshTrigger }) => {
               {files.map((item) => (
                 <tr className="border-b">
                   <td className="py-2 px-4">{item.correlationId}</td>
-                  <td className="py-2 px-4">{item.inclusionDate}</td>
+                  <td className="py-2 px-4">{DateUtils.formatDate(item.inclusionDate)}</td>
                   <td className="py-2 px-4"><span className="text-green-600">{CurrencyUtils.formatCurrency(item.grossByCorrelationId)}</span></td>
                   <td className="py-2 px-4">
                     <a
@@ -67,11 +86,7 @@ const DataTable = ({ refreshTrigger }) => {
               ))}
             </tbody>
           </table>
-          <p className="text-lg font-semibold text-gray-700 mt-4">
-            Receita bruta: <span className="text-green-600">{CurrencyUtils.formatCurrency(files[0].totalGross)}</span>
-          </p>
         </div>
-
       ) : (
         <p className="text-lg font-semibold text-gray-700">
           Não há arquivos disponíveis.

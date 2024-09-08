@@ -1,4 +1,5 @@
 ---
+import AuthRoute from "../components/AuthRoute";
 import FileManager from "../components/FileManager";
 ---
 
@@ -7,12 +8,18 @@ import FileManager from "../components/FileManager";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="description"
+			content="Página de relação de arquivos de compras"
+		/>
 		<title>Relação de Arquivos de Compras</title>
 	</head>
 	<body class="container mx-auto px-4 py-8">
 		<h1 class="text-3xl font-bold text-center mb-8 text-blue-600">
 			Relação de Arquivos de Compras
 		</h1>
-		<FileManager client:load />
+		<AuthRoute client:only="react">
+			<FileManager client:load />
+		</AuthRoute>
 	</body>
 </html>

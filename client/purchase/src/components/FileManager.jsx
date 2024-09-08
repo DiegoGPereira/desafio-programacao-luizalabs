@@ -11,10 +11,10 @@ const FileManager = () => {
 
 	return (
 		<>
-			<div class="bg-white shadow-md rounded-lg p-6 mb-8">
+			<div className="bg-white shadow-md rounded-lg p-6 mb-8">
 				<FileUpload onFileUploaded={handleFileUploaded} />
 			</div>
-			<div class="bg-white shadow-md rounded-lg p-6">
+			<div className="bg-white shadow-md rounded-lg p-6">
 				<FileList refreshTrigger={refreshTrigger} />
 			</div>
 		</>

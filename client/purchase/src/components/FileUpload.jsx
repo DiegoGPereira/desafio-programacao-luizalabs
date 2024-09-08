@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { getToken } from '../utils/TokenUtils';
 
 const FileUpload = ({ onFileUploaded }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -14,18 +15,26 @@ const FileUpload = ({ onFileUploaded }) => {
         event.preventDefault();
         const formData = new FormData();
         formData.append('file', selectedFile);
+        const token = getToken();
 
         try {
             const response = await axios.post(url + '/api/v1/purchase/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + token,
                 },
             });
 
-            setUploadStatus('Arquivo carregado! \n Identificador: ' + response.data);
+            setUploadStatus('Arquivo carregado! Identificador: ' + response.data);
             onFileUploaded();
         } catch (error) {
-            setUploadStatus('Falha ao enviar o arquivo ' + error);
+            if (error.response.data) {
+                setUploadStatus(`Falha ao enviar o arquivo: ${error.response.data.message || error.response.data}`);
+            } else if (error.request) {
+                setUploadStatus('Falha ao enviar o arquivo: Sem resposta do servidor, ' + error.message);
+            } else {
+                setUploadStatus('Falha ao enviar o arquivo: ' + error.message);
+            }
         }
     };
 
