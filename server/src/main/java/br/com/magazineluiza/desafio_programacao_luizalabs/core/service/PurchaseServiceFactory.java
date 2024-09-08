@@ -15,7 +15,7 @@ public class PurchaseServiceFactory {
         if (filename != null && (filename.endsWith(".tab") || filename.endsWith(".txt"))) {
             return txtReader;
         }  // another types ex: csv
-        throw new IllegalArgumentException("Unsupported file type");
+        throw new IllegalArgumentException("Tipo de arquivo não suportado.");
     }
 
 }
