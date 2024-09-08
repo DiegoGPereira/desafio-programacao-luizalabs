@@ -1,59 +1,64 @@
 package br.com.magazineluiza.desafio_programacao_luizalabs.unit.api.security;
 
+import br.com.magazineluiza.desafio_programacao_luizalabs.api.security.CustomUserDetails;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.security.CustomUserDetailsService;
-import org.junit.jupiter.api.BeforeEach;
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.UserEntity;
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class CustomUserDetailsServiceTest {
 
-    private CustomUserDetailsService userDetailsService;
+    @Mock
+    private UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
-        userDetailsService = new CustomUserDetailsService();
-    }
+    @InjectMocks
+    private CustomUserDetailsService customUserDetailsService;
 
     @Test
-    void loadUserByUsername_ExistingUser() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("user1");
+    void loadUserByUsername_UserExists_ReturnsCustomUserDetails() {
+        String username = "testuser";
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(username);
+        userEntity.setPassword("password");
+        userEntity.setActive(true);
+        userEntity.setAuthorities(Collections.emptyList());
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(userEntity));
+
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+
         assertNotNull(userDetails);
-        assertEquals("user1", userDetails.getUsername());
+        assertInstanceOf(CustomUserDetails.class, userDetails);
+        assertEquals(username, userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword());
         assertTrue(userDetails.isEnabled());
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
+        assertEquals(Collections.emptyList(), userDetails.getAuthorities());
+
+        verify(userRepository, times(1)).findByUsername(username);
     }
 
     @Test
-    void loadUserByUsername_ExistingAdmin() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
-        assertNotNull(userDetails);
-        assertEquals("admin", userDetails.getUsername());
-        assertTrue(userDetails.isEnabled());
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-    }
+    void loadUserByUsername_UserNotFound_ThrowsUsernameNotFoundException() {
+        String username = "testuserinexistente";
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-    @Test
-    void loadUserByUsername_NonExistingUser() {
         assertThrows(UsernameNotFoundException.class, () -> {
-            userDetailsService.loadUserByUsername("nonexistentuser");
+            customUserDetailsService.loadUserByUsername(username);
         });
-    }
 
-    @Test
-    void loadUserByUsername_CorrectPassword() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("user1");
-        assertEquals("$2a$12$74qc9RB/33wyGlvnic3bu.5SYYTnKnFpDf.lC7ZRwaHOAAnuLui7K", userDetails.getPassword());
-    }
-
-    @Test
-    void loadUserByUsername_CaseSensitive() {
-        assertThrows(UsernameNotFoundException.class, () -> {
-            userDetailsService.loadUserByUsername("User1");
-        });
+        verify(userRepository, times(1)).findByUsername(username);
     }
 }
