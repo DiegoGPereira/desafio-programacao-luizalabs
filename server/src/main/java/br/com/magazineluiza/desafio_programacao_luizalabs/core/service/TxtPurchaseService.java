@@ -39,7 +39,7 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
                 purchases.add(purchase);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return purchases;
