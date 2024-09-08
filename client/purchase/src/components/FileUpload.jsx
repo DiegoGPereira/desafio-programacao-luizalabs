@@ -5,7 +5,6 @@ import { getToken } from '../utils/TokenUtils';
 const FileUpload = ({ onFileUploaded }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
-    const url = 'http://localhost:8080';
 
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
@@ -16,9 +15,10 @@ const FileUpload = ({ onFileUploaded }) => {
         const formData = new FormData();
         formData.append('file', selectedFile);
         const token = getToken();
+        const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
 
         try {
-            const response = await axios.post(url + '/api/v1/purchase/upload', formData, {
+            const response = await axios.post(apiUrl + '/api/v1/purchase/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: 'Bearer ' + token,

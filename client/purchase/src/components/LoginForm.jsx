@@ -8,9 +8,10 @@ const LoginForm = () => {
     const [status, setStatus] = useState('');
 
     const handleSubmit = async (e) => {
+        const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/auth/login', {
+            const response = await axios.post(apiUrl + '/api/v1/auth/login', {
                 username,
                 password
             });

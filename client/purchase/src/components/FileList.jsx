@@ -12,9 +12,10 @@ const DataTable = ({ refreshTrigger }) => {
 
   const handleFileChange = async () => {
     const token = getToken();
+    const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/purchase/uploaded-files`, {
+      const response = await axios.get(apiUrl + '/api/v1/purchase/uploaded-files', {
         headers: {
           Authorization: 'Bearer ' + token,
         },

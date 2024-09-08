@@ -10,11 +10,11 @@ const FileDetails = ({ correlationId }) => {
 
     useEffect(() => {
         const token = getToken();
-        const url = 'http://localhost:8080';
+        const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
         const fetchFileData = async () => {
 
             try {
-                const response = await axios.get(url + `/api/v1/purchase/${correlationId}`, {
+                const response = await axios.get(apiUrl + `/api/v1/purchase/${correlationId}`, {
                     headers: {
                         Authorization: 'Bearer ' + token,
                     }
