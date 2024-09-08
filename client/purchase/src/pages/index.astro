@@ -1,6 +1,5 @@
 ---
-import FileUpload from "../components/FileUpload";
-import ListFiles from "../components/FileList";
+import FileManager from "../components/FileManager";
 ---
 
 <!doctype html>
@@ -8,17 +7,12 @@ import ListFiles from "../components/FileList";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Store</title>
+		<title>Relação de Arquivos de Compras</title>
 	</head>
 	<body class="container mx-auto px-4 py-8">
 		<h1 class="text-3xl font-bold text-center mb-8 text-blue-600">
-			Relação de Arquivos de Vendas
+			Relação de Arquivos de Compras
 		</h1>
-		<div class="bg-white shadow-md rounded-lg p-6 mb-8">
-			<FileUpload client:load />
-		</div>
-		<div class="bg-white shadow-md rounded-lg p-6">
-			<ListFiles client:load />
-		</div>
+		<FileManager client:load />
 	</body>
 </html>

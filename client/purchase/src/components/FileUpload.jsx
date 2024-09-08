@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const FileUpload = () => {
+const FileUpload = ({ onFileUploaded }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const url = 'http://localhost:8080';
@@ -22,7 +22,8 @@ const FileUpload = () => {
                 },
             });
 
-            setUploadStatus('Arquivo enviado! \n Identificador: ' + response.data);
+            setUploadStatus('Arquivo carregado! \n Identificador: ' + response.data);
+            onFileUploaded();
         } catch (error) {
             setUploadStatus('Falha ao enviar o arquivo ' + error);
         }
@@ -50,7 +51,7 @@ const FileUpload = () => {
                     Enviar
                 </button>
             </form>
-            {uploadStatus && <p className="mt-4 text-sm text-gray-600">{uploadStatus}</p>}
+            {uploadStatus && <p className="mt-4 text-sm text-gray-600 font-bold">{uploadStatus}</p>}
         </div>
     );
 };
