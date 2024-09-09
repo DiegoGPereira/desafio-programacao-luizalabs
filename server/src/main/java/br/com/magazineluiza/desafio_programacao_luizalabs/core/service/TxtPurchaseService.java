@@ -1,6 +1,7 @@
 package br.com.magazineluiza.desafio_programacao_luizalabs.core.service;
 
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesResponse;
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.exception.PurchaseFileProcessingException;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Purchase;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.repository.PurchaseRepository;
 import jakarta.transaction.Transactional;
@@ -29,7 +30,7 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             String headerLine = br.readLine();
             if (headerLine == null) {
-                throw new IOException("Header not found or empty file");
+                throw new IOException("Cabecalho do arquivo não encontrado ou arquivo vazio");
             }
 
             String line;
@@ -39,7 +40,7 @@ public class TxtPurchaseService implements PurchaseServiceOperations {
                 purchases.add(purchase);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new PurchaseFileProcessingException(e.getMessage());
         }
 
         return purchases;

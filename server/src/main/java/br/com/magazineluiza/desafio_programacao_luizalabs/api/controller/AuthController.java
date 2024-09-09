@@ -2,6 +2,7 @@ package br.com.magazineluiza.desafio_programacao_luizalabs.api.controller;
 
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.AuthenticationRequest;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.AuthenticationResponse;
+import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.ErrorResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -35,7 +38,8 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.username(), authenticationRequest.password())
             );
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            ErrorResponse error = new ErrorResponse(LocalDateTime.now(), e.getMessage(), "");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.username());
