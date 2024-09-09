@@ -16,7 +16,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina local:
 1. Clone o repositório
 https://github.com/DiegoGPereira/desafio-programacao-luizalabs.git
 
-2. Mude para a branch feature/develop
+2. Mude para a branch feature/develop:
 git branch feature/develop
 
 ## Configuração do Backend (Spring)
