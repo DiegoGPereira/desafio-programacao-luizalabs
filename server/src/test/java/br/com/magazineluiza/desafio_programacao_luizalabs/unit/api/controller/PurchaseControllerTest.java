@@ -4,6 +4,7 @@ import br.com.magazineluiza.desafio_programacao_luizalabs.api.controller.Purchas
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Purchase;
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.PurchaseServiceFactory;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.PurchaseServiceOperations;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,9 @@ class PurchaseControllerTest {
     @Mock
     private PurchaseServiceOperations purchaseService;
 
+    @Mock
+    private PurchaseServiceFactory purchaseServiceFactory;
+
     @InjectMocks
     private PurchaseController purchaseController;
 
@@ -44,6 +48,7 @@ class PurchaseControllerTest {
         List<Purchase> purchases = List.of(purchase);
 
         when(purchaseService.readFile(file)).thenReturn(purchases);
+        when(purchaseServiceFactory.getReader(file)).thenReturn(purchaseService);
 
         ResponseEntity<UUID> response = purchaseController.uploadFile(file);
 

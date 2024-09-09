@@ -4,6 +4,7 @@ import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseFilesR
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseMapper;
 import br.com.magazineluiza.desafio_programacao_luizalabs.api.dto.PurchaseResponse;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Purchase;
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.PurchaseServiceFactory;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.PurchaseServiceOperations;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,12 @@ public class PurchaseController {
 
     @Autowired
     private PurchaseServiceOperations purchaseService;
+    @Autowired
+    private PurchaseServiceFactory purchaseServiceFactory;
 
     @PostMapping("/upload")
     public ResponseEntity<UUID> uploadFile(@RequestParam("file") MultipartFile file) {
+        purchaseService = (PurchaseServiceOperations) purchaseServiceFactory.getReader(file);
         List<Purchase> purchases;
         purchases = purchaseService.readFile(file);
         purchaseService.saveAll(purchases);

@@ -1,5 +1,6 @@
 package br.com.magazineluiza.desafio_programacao_luizalabs.unit.core.service;
 
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.exception.UnsupportedFileTypeException;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.PurchaseReader;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.PurchaseServiceFactory;
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.service.TxtPurchaseService;
@@ -42,13 +43,13 @@ class PurchaseServiceFactoryTest {
     @Test
     void testGetReaderForUnsupportedFile() {
         MultipartFile file = new MockMultipartFile("file", "test.csv", "text/csv", "content".getBytes());
-        assertThrows(IllegalArgumentException.class, () -> purchaseServiceFactory.getReader(file));
+        assertThrows(UnsupportedFileTypeException.class, () -> purchaseServiceFactory.getReader(file));
     }
 
     @Test
     void testGetReaderForNullFilename() {
         MultipartFile file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn(null);
-        assertThrows(IllegalArgumentException.class, () -> purchaseServiceFactory.getReader(file));
+        assertThrows(UnsupportedFileTypeException.class, () -> purchaseServiceFactory.getReader(file));
     }
 }
