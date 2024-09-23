@@ -28,12 +28,11 @@ paths:
                 $ref: '#/components/schemas/AuthenticationResponse'
         '401':
           description: Unauthorized
-
-  /purchase/upload:
+  /purchase/file:
     post:
       summary: Upload purchase file
       tags:
-        - Purchase
+        - PurchaseFile
       requestBody:
         required: true
         content:
@@ -47,19 +46,32 @@ paths:
       responses:
         '201':
           description: File uploaded successfully
+    get:
+      summary: Get purchases files summarized
+      tags:
+        - PurchaseFile
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
           content:
             application/json:
               schema:
-                type: string
-                format: uuid
-
-  /purchase/{correlationId}:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurchaseFileResponse'
+  /purchase:
     get:
-      summary: Get purchases file by correlation ID
+      summary: Get purchases records details by file
       tags:
         - Purchase
       parameters:
-        - name: correlationId
+        - name: fileName
           in: path
           required: true
           schema:
@@ -74,21 +86,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/PurchaseResponse'
 
-  /purchase/uploaded-files:
-    get:
-      summary: Get all uploaded files
-      tags:
-        - Purchase
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PurchaseFilesResponse'
-
 components:
   schemas:
     AuthenticationRequest:
@@ -102,40 +99,35 @@ components:
     AuthenticationResponse:
       type: object
       properties:
-        token:
+        jwt:
           type: string
 
     PurchaseResponse:
       type: object
       properties:
-        id:
+        purchaserName:
+          type: string
+        itemDescription:
+          type: string
+        itemPrice:
+          type: decimal
+        purchaseCount:
           type: integer
-        cpf:
+        merchantAddress:
           type: string
-        private:
-          type: boolean
-        incompleto:
-          type: boolean
-        dataUltimaCompra:
-          type: string
-          format: date
-        ticketMedio:
+        merchantName:
           type: number
-        ticketUltimaCompra:
-          type: number
-        lojaMaisFrequente:
-          type: string
-        lojaUltimaCompra:
-          type: string
-
-    PurchaseFilesResponse:
-      type: object
-      properties:
-        correlationId:
-          type: string
-          format: uuid
-        fileName:
-          type: string
-        uploadDate:
+        inclusionDate:
           type: string
           format: date-time
+
+    PurchaseFileResponse:
+      type: object
+      properties:
+        fileName:
+          type: string
+        inclusionDate:
+          type: string
+          format: date-time
+        gross:
+          type: decimal
