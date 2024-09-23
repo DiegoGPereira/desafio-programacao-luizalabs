@@ -1,7 +1,7 @@
 ---
 import AuthRoute from "../../components/AuthRoute";
 import FileDetails from "../../components/FileDetails";
-const { correlationId } = Astro.params;
+const { fileName } = Astro.params;
 ---
 
 <html lang="pt-BR" class="bg-gray-100">
@@ -20,7 +20,7 @@ const { correlationId } = Astro.params;
         Retornar
       </a>
       <AuthRoute client:only="react">
-        <FileDetails client:load correlationId={correlationId} />
+        <FileDetails client:load fileName={fileName} />
       </AuthRoute>
     </div>
   </body>

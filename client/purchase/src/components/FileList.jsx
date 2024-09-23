@@ -15,7 +15,7 @@ const DataTable = ({ refreshTrigger }) => {
     const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
 
     try {
-      const response = await axios.get(apiUrl + '/api/v1/purchase/uploaded-files', {
+      const response = await axios.get(apiUrl + '/api/v1/purchase/file', {
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -53,13 +53,10 @@ const DataTable = ({ refreshTrigger }) => {
     <div className="overflow-x-auto">
       {hasFiles ? (
         <div>
-          <p className="text-lg font-semibold text-gray-700 mb-4">
-            Receita bruta: <span className="text-green-600">{CurrencyUtils.formatCurrency(files[0].totalGross)}</span>
-          </p>
           <table className="min-w-full bg-white">
             <thead className="bg-gray-100">
               <tr>
-                <th className="py-2 px-4 text-left">Identificador do arquivo</th>
+                <th className="py-2 px-4 text-left">Nome do arquivo</th>
                 <th className="py-2 px-4 text-left">Data de inclusão</th>
                 <th className="py-2 px-4 text-left">Receita bruta do arquivo</th>
                 <th className="py-2 px-4 text-left">Ações</th>
@@ -68,12 +65,12 @@ const DataTable = ({ refreshTrigger }) => {
             <tbody>
               {files.map((item) => (
                 <tr className="border-b">
-                  <td className="py-2 px-4">{item.correlationId}</td>
+                  <td className="py-2 px-4">{item.fileName}</td>
                   <td className="py-2 px-4">{DateUtils.formatDate(item.inclusionDate)}</td>
-                  <td className="py-2 px-4"><span className="text-green-600">{CurrencyUtils.formatCurrency(item.grossByCorrelationId)}</span></td>
+                  <td className="py-2 px-4"><span className="text-green-600">{CurrencyUtils.formatCurrency(item.gross)}</span></td>
                   <td className="py-2 px-4">
                     <a
-                      href={`/file-details/${item.correlationId}`}
+                      href={`/file-details/${item.fileName}`}
                       className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded inline-flex items-center"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

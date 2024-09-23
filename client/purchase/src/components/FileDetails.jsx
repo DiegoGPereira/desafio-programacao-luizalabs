@@ -3,7 +3,7 @@ import axios from 'axios';
 import CurrencyUtils from '../utils/CurrencyUtils';
 import { getToken } from '../utils/TokenUtils';
 
-const FileDetails = ({ correlationId }) => {
+const FileDetails = ({ fileName }) => {
     const [fileData, setFileData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const FileDetails = ({ correlationId }) => {
         const fetchFileData = async () => {
 
             try {
-                const response = await axios.get(apiUrl + `/api/v1/purchase/${correlationId}`, {
+                const response = await axios.get(apiUrl + `/api/v1/purchase/${fileName}`, {
                     headers: {
                         Authorization: 'Bearer ' + token,
                     }
@@ -34,7 +34,7 @@ const FileDetails = ({ correlationId }) => {
         };
 
         fetchFileData();
-    }, [correlationId]);
+    }, [fileName]);
 
     const hasData = fileData && fileData.length > 0;
 
@@ -50,7 +50,7 @@ const FileDetails = ({ correlationId }) => {
         <div className="overflow-x-auto">
 
             <p className="text-lg font-semibold text-gray-700 mb-4">
-                Identificador do arquivo: <span className="text-green-600">{correlationId}</span>
+                Nome do arquivo: <span className="text-green-600">{fileName}</span>
             </p>
 
             {hasData ? (

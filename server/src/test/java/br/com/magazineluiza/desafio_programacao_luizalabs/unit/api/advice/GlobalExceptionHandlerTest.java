@@ -6,6 +6,7 @@ import br.com.magazineluiza.desafio_programacao_luizalabs.core.exception.Purchas
 import br.com.magazineluiza.desafio_programacao_luizalabs.core.exception.UnsupportedFileTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,7 +38,7 @@ class GlobalExceptionHandlerTest {
         UnsupportedFileTypeException exception = new UnsupportedFileTypeException("pdf");
         ResponseEntity<ErrorResponse> response = exceptionHandler.handleUnsupportedFileTypeException(exception);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().message().contains("pdf"));
         assertNotNull(response.getBody().timestamp());
@@ -48,9 +49,32 @@ class GlobalExceptionHandlerTest {
         UsernameNotFoundException exception = new UsernameNotFoundException("erro");
         ResponseEntity<ErrorResponse> response = exceptionHandler.handleUsernameNotFoundException(exception);
 
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("erro", response.getBody().message());
+        assertNotNull(response.getBody().timestamp());
+    }
+
+    @Test
+    void handleDataIntegrityViolationException() {
+        DataIntegrityViolationException exception = new DataIntegrityViolationException("erro");
+        ResponseEntity<ErrorResponse> response = exceptionHandler.handleDataIntegrityViolationException(exception);
+
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("erro", response.getBody().message());
         assertNotNull(response.getBody().timestamp());
     }
+
+    @Test
+    void handleIllegalArgumentException() {
+        IllegalArgumentException exception = new IllegalArgumentException("erro");
+        ResponseEntity<ErrorResponse> response = exceptionHandler.handleIllegalArgumentException(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("erro", response.getBody().message());
+        assertNotNull(response.getBody().timestamp());
+    }
+
 }

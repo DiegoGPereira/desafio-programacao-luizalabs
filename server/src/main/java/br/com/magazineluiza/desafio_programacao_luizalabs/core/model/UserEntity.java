@@ -39,4 +39,5 @@ public class UserEntity {
         this.password = password;
         this.active = active;
     }
+
 }

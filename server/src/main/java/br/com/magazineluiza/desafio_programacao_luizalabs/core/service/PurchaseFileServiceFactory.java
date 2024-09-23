@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class PurchaseServiceFactory {
+public class PurchaseFileServiceFactory {
 
     @Autowired
-    private TxtPurchaseService txtReader;
+    private PurchaseFileTxtService txtReader;
 
-    public PurchaseReader<MultipartFile> getReader(MultipartFile file) {
+    public PurchaseFileService getReader(MultipartFile file) {
         String filename = file.getOriginalFilename();
         if (filename == null) {
             throw new UnsupportedFileTypeException("Nome do arquivo não encontrado");

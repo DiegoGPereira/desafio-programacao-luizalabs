@@ -1,16 +1,15 @@
 package br.com.magazineluiza.desafio_programacao_luizalabs.core.repository;
 
-import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Purchase;
+import br.com.magazineluiza.desafio_programacao_luizalabs.core.model.Merchant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PurchaseRepository extends JpaRepository<Purchase, UUID> {
+public interface MerchantRepository extends JpaRepository<Merchant, UUID> {
 
-    Optional<List<Purchase>> findByPurchaseFile_FileName(String fileName);
+    Optional<Merchant> findByNameAndAddress(String merchantName, String merchantAddress);
 
 }

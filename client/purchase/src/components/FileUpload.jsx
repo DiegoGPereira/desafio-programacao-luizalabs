@@ -18,14 +18,14 @@ const FileUpload = ({ onFileUploaded }) => {
         const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
 
         try {
-            const response = await axios.post(apiUrl + '/api/v1/purchase/upload', formData, {
+            const response = await axios.post(apiUrl + '/api/v1/purchase/file', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: 'Bearer ' + token,
                 },
             });
 
-            setUploadStatus('Arquivo carregado! Identificador: ' + response.data);
+            setUploadStatus('Arquivo carregado com sucesso!');
             onFileUploaded();
         } catch (error) {
             if (error.response.data) {
