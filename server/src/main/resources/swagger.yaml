@@ -28,11 +28,14 @@ paths:
                 $ref: '#/components/schemas/AuthenticationResponse'
         '401':
           description: Unauthorized
+
   /purchase/file:
     post:
       summary: Upload purchase file
       tags:
         - PurchaseFile
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -46,13 +49,17 @@ paths:
       responses:
         '201':
           description: File uploaded successfully
+        '401':
+          description: Unauthorized
     get:
       summary: Get purchases files summarized
       tags:
         - PurchaseFile
+      security:
+        - BearerAuth: []
       parameters:
         - name: fileName
-          in: path
+          in: query
           required: true
           schema:
             type: string
@@ -65,14 +72,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PurchaseFileResponse'
+        '401':
+          description: Unauthorized
+
   /purchase:
     get:
       summary: Get purchases records details by file
       tags:
         - Purchase
+      security:
+        - BearerAuth: []
       parameters:
         - name: fileName
-          in: path
+          in: query
           required: true
           schema:
             type: string
@@ -85,8 +97,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PurchaseResponse'
+        '401':
+          description: Unauthorized
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     AuthenticationRequest:
       type: object
@@ -110,13 +130,14 @@ components:
         itemDescription:
           type: string
         itemPrice:
-          type: decimal
+          type: number
+          format: decimal
         purchaseCount:
           type: integer
         merchantAddress:
           type: string
         merchantName:
-          type: number
+          type: string
         inclusionDate:
           type: string
           format: date-time
@@ -130,4 +151,5 @@ components:
           type: string
           format: date-time
         gross:
-          type: decimal
+          type: number
+          format: decimal
